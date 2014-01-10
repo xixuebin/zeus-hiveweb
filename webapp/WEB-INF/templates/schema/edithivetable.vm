@@ -1,0 +1,275 @@
+#set($nav='user.set')
+
+#set($title='添加hive表')
+<html>
+<head>
+  	<!-- The styles -->
+	<link id="bs-css" href="${rc.contextPath}/assets/css/bootstrap-cerulean.css"
+	rel="stylesheet">
+<script src="${rc.contextPath}/assets/js/jquery-1.7.2.min.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="${rc.contextPath}/assets/css/stylehwi.css" />
+<link href="${rc.contextPath}/assets/css/bootstrap-responsive.css" rel="stylesheet">
+<link href="${rc.contextPath}/assets/css/charisma-app.css" rel="stylesheet">
+<link href="${rc.contextPath}/assets/css/jquery-ui-1.8.21.custom.css"
+	rel="stylesheet">
+<link href='${rc.contextPath}/assets/css/fullcalendar.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/fullcalendar.print.css' rel='stylesheet'
+	media='print'>
+<link href='${rc.contextPath}/assets/css/chosen.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/uniform.default.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/colorbox.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/jquery.cleditor.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/jquery.noty.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/noty_theme_default.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/elfinder.min.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/elfinder.theme.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/jquery.iphone.toggle.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/opa-icons.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/uploadify.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/validationEngine.jquery.css'
+	rel='stylesheet'>
+<script type="text/javascript" src="${rc.contextPath}/assets/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${rc.contextPath}/assets/js/less-1.3.0.min.js"></script>
+<script type="text/javascript" src="${rc.contextPath}/assets/js/highlight.pack.js"></script>
+<script type="text/javascript" src="${rc.contextPath}/assets/js/custom.js"></script>
+<script type="text/javascript" src="${rc.contextPath}/assets/js/LG.js"></script>
+<script src="${rc.contextPath}/assets/js/ligerUI/core/base.js" type="text/javascript"></script>
+<script src="${rc.contextPath}/assets/js/ligerUI/plugins/ligerDialog.js"
+	type="text/javascript"></script>
+<script src="${rc.contextPath}/assets/js/ligerUI/ligerui.min.js"
+	type="text/javascript"></script>
+<script src="${rc.contextPath}/assets/js/ligerUI/plugins/ligerToolBar.js"
+	type="text/javascript"></script>
+
+<link href="${rc.contextPath}/assets/js/ligerUI/skins/Aqua/css/ligerui-all.css"
+	rel="stylesheet" type="text/css" />
+<link href="${rc.contextPath}/assets/js/ligerUI/skins/blue/css/all.css"
+	rel="stylesheet" type="text/css" />
+<link href="${rc.contextPath}/assets/js/ligerUI/skins/ligerui-icons.css"
+	rel="stylesheet" type="text/css" />
+	<link rel="shortcut icon" href="${rc.contextPath}/assets/img/favicon.ico">
+</head>
+
+<script>
+
+  var  fieldcount = 100;
+
+ //  移除元素内部内容
+  function   removeHtml(id) {
+  	$("#"+id+"").remove();
+  }
+ // 显示删除按钮
+  function    viewButton(divId)  {
+	  $("#"+divId+"").css("display","block");
+  }
+  
+  // 隐藏删除按钮
+  function   hiddenButton(divId) {
+	  $("#"+divId+"").css("display","none");
+  }
+  // 增加一组分区
+  function addPartition() {
+    
+  
+  }
+
+
+ // 获取字段类型select
+ function getFieldType(sid,count,msg){
+    var html='字段类型：<select id="fieldtype" name="fieldtype"  placeholder='+msg+' class="input-xlarge" type="text" style="width:100px;height:26px;">';
+    html+='<option value="tinyint">tinyint</option>';
+    html+='<option value="smallint">smallint</option>';
+    html+='<option value="int">int</option>';
+    html+='<option value="bigint">bigint</option>';
+    html+='<option value="float">float</option>';
+    html+='<option value="double">double</option>';
+    html+='<option value="timestamp">timestamp</option>';
+    html+='<option value="date">date</option>';
+    html+='<option value="boolean">boolean</option>';
+    html+='<option value="string" selected="true">string</option>';
+    html+='<option value="binary">binary</option>';
+    html+='<option value="array">array</option>';
+    html+='<option value="struct">struct</option>';
+    html+='<option value="union">union</option>';
+    html+='</select>';
+   return html;
+ }
+ 
+ // 增加一组字段
+  function  addField(){
+     var  fielddivid = "fielddiv"+fieldcount;
+     var html='<div class="controls"  id="fielddiv'+fieldcount+'">';
+     html+='<input id="field" name="field" placeholder="请输入字段名" class="input-xlarge" type="text" style="width:100px;height:26px;">';
+     html+=getFieldType("fieldtype",fieldcount,"请选择字段类型");
+     html+='是否为分区：<select id="ispartition" name="ispartition" placeholder="请选择是否为分区字段" class="input-xlarge" type="text" style="width:100px;height:26px;">';
+     html+='<option value="Y">Y</option>';
+     html+='<option value="N" selected="true">N</option>';
+     html+='<input id="fieldcomment" name="fieldcomment" placeholder="备注" class="input-xlarge" type="text" style="width:100px;height:26px;">';
+     html+='<button class="btn btn-small btn-primary" type="button"  onclick=subField("'+fielddivid+'")><i class="icon-minus"></i></button>';
+     html+='</div>';
+    $("#tablefield").append(html);
+    fieldcount ++;
+  }
+
+ // 减去一组字段
+ function  subField() {
+   if(fieldcount==1) {
+      return;
+   }
+   fieldcount --;
+   var id="fielddiv"+fieldcount;
+   removeHtml(id);
+ }
+ 
+//减去一组字段
+ function  subField1(divid,fieldid) {
+	 $.ligerDialog.confirm("您确认删除该数据吗?", function(yes){
+			if(yes){
+				$.ajax({
+					type : 'post',
+					cache : false,
+					dataType : 'html',
+					async : false,
+					data : "id="+ fieldid,
+					url : '${rc.contextPath}/hivetable/deletefield',
+					success : function(data) {
+						if (data == "success") {
+							LG.showSuccess("删除成功");
+							f_reload();
+						} else {
+							LG.showError("删除失败");
+						}
+					},
+					error : function(xhr, status, errMsg) {
+						LG.showAjaxError(xhr, status, errMsg);
+					},
+					complete : function() {
+						LG.hideLoading();
+					}
+				});
+				
+			}});
+   
+   removeHtml(divid);
+ }
+ 
+ 
+ //  提交表单时
+  function   submitForm() {
+	  
+	  var  tableName = $("#tableName").val();
+	  var  comment = $("#comment").val();
+	  var  ret = true;
+	  if (tableName=='' || comment=='') {
+		  alert("请输入表名或者表的备注,不能为空");
+		  ret = false;
+		  return ret;
+	  }
+     // 字段名
+     var fields = $("input[name=field]");
+	  for(var i = 0; i < fields.length; i ++){
+		  var fvalue = fields[i].value;
+		  if (fvalue == "") {
+		      alert("字段名不能为空");
+		      ret = false;
+			  return ret;
+		  }
+	  }
+    
+	  // 字段的备注
+	  var fields = $("input[name=fieldcomment]");
+	  for(var i = 0; i < fields.length; i ++) {
+		  var fvalue = fields[i].value;
+		  if (fvalue == "") {
+		      alert("字段备注不能为空");
+		      ret = false;
+			  return ret;
+		  }
+	  }
+	  return ret;
+  }
+ 
+  // 提交表单
+  function  submitFormEnd() {
+      var ret=submitForm();
+      if(ret == false) {
+        return ;
+      }
+      $("#addhiveform").submit();
+    
+  }
+ 
+
+</script>
+
+<body>
+            #if($msg)
+            <div class="alert alert-#alt($msg-type 'error')">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                $msg
+            </div>
+            #end
+<h2 sytyle="font-size:16px;">$title</h2>
+<hr class="bold">
+<div style="float:left">  
+<form id="addhiveform" action="${rc.contextPath}/hivetable/edittable" method="post" class="form-horizontal">
+
+    <div class="control-group">
+        <label class="control-label" for="tableName">表名：</label>
+        <div class="controls">
+            <input id="tableName" type="text" name="tableName"  value="$!tablename" placeholder="请输入表名"  style="width:300px;height:26px;"/>
+        </div>
+    </div>
+    <div class="control-group" id="tablecomment">
+       <label class="control-label" for="comment">备注：</label>
+       <div class="controls">
+           <input id="comment" name="comment"  value="$!tablecomment"placeholder="请输入备注" class="input-xlarge" type="text" style="width:300px;height:26px;">
+       </div>
+   </div>
+    <div class="control-group" id="tablefield">
+       <input value="$tableid" id="id" name="id" type="hidden"/>
+       <label class="control-label" for="field">字段：</label>
+       #foreach ($fs in $tablefieldlist)
+       <div class="controls"  id="field_$fs.getFieldId()">
+           <input id="field" name="field"  value="$fs.getField()" placeholder="请输入字段名" class="input-xlarge" type="text" style="width:100px;height:26px;">字段类型：<select id="fieldtype" name="fieldtype" placeholder="请输入字段类型" class="input-xlarge" type="text" style="width:100px;height:26px;">
+           <option value="tinyint" #if($fs.getFieldType() == "tinyint") selected="true" #end)>tinyint</option>
+           <option value="smallint" #if($fs.getFieldType() == "smallint") selected="true" #end>smallint</option>
+           <option value="int" #if($fs.getFieldType() == "int") selected="true" #end>int</option>
+           <option value="bigint" #if($fs.getFieldType() == "bigint") selected="true" #end>bigint</option>
+           <option value="float" #if($fs.getFieldType() == "float") selected="true" #end>float</option>
+           <option value="double"  #if($fs.getFieldType() == "double") selected="true" #end>double</option>
+           <option value="timestamp" #if($fs.getFieldType() == "timestamp") selected="true" #end>timestamp</option>
+           <option value="date" #if($fs.getFieldType() == "date") selected="true" #end>date</option>
+           <option value="boolean"  #if($fs.getFieldType() == "boolean") selected="true" #end>boolean</option>
+           <option value="string" #if($fs.getFieldType() == "string") selected="true" #end>string</option>
+           <option value="binary" #if($fs.getFieldType() == "binary") selected="true" #end>binary</option>
+           <option value="array" #if($fs.getFieldType() == "array") selected="true" #end>array</option>
+           <option value="struct" #if($fs.getFieldType() == "struct") selected="true" #end>struct</option>
+           <option value="union" #if($fs.getFieldType() == "union") selected="true" #end>union</option></select>是否为分区：<select id="ispartition" name="ispartition" placeholder="请选择是否为分区字段" class="input-xlarge" type="text" style="width:100px;height:26px;">
+            <option value="Y" #if($fs.getIsPartition() == "Y") selected="true" #end >Y</option>
+            <option value="N" #if($fs.getIsPartition() == "N") selected="true" #end>N</option>
+           </select><input id="fieldcomment" name="fieldcomment"  value="$fs.getFieldComment()" placeholder="备注" class="input-xlarge" type="text" style="width:100px;height:26px;"/>
+           <button class="btn btn-small btn-primary" type="button"  onclick=subField1("field_$fs.getFieldId()","$fs.getFieldId()")><i class="icon-minus"></i></button>
+       </div>
+       #end     
+   </div>
+   <div class="control-group" id="tablefieldadd">
+       <div class="controls">
+       <button class="btn btn-small btn-primary" type="button" onclick="addField()"><i class=" icon-plus"></i></button>
+       </div>
+   </div>
+   <div class="form-actions">
+        <button  type="button"  onclick="submitFormEnd()" class="btn btn-primary" style="font-size: 18px;line-height: 25px;width:100px;">提交</button>
+    </div>
+</form>
+</div>
+</body>
+<script type="text/javascript">
+	$(function (){
+		if(window.parent)
+		window.parent.clearLoading();
+	});
+</script>
+</html>
+

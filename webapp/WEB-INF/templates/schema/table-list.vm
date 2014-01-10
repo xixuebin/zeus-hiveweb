@@ -1,0 +1,218 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>接入hive表列表</title>
+<link id="bs-css" href="${rc.contextPath}/assets/css/bootstrap-cerulean.css"
+	rel="stylesheet">
+<script src="${rc.contextPath}/assets/js/jquery-1.7.2.min.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="${rc.contextPath}/assets/css/stylehwi.css" />
+<link href="${rc.contextPath}/assets/css/bootstrap-responsive.css" rel="stylesheet">
+<link href="${rc.contextPath}/assets/css/charisma-app.css" rel="stylesheet">
+<link href="${rc.contextPath}/assets/css/jquery-ui-1.8.21.custom.css"
+	rel="stylesheet">
+<link href='${rc.contextPath}/assets/css/fullcalendar.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/fullcalendar.print.css' rel='stylesheet'
+	media='print'>
+<link href='${rc.contextPath}/assets/css/chosen.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/uniform.default.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/colorbox.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/jquery.cleditor.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/jquery.noty.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/noty_theme_default.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/elfinder.min.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/elfinder.theme.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/jquery.iphone.toggle.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/opa-icons.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/uploadify.css' rel='stylesheet'>
+<link href='${rc.contextPath}/assets/css/validationEngine.jquery.css'
+	rel='stylesheet'>
+<script type="text/javascript" src="${rc.contextPath}/assets/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${rc.contextPath}/assets/js/less-1.3.0.min.js"></script>
+<script type="text/javascript" src="${rc.contextPath}/assets/js/highlight.pack.js"></script>
+<script type="text/javascript" src="${rc.contextPath}/assets/js/custom.js"></script>
+<script type="text/javascript" src="${rc.contextPath}/assets/js/LG.js"></script>
+<script src="${rc.contextPath}/assets/js/ligerUI/core/base.js" type="text/javascript"></script>
+<script src="${rc.contextPath}/assets/js/ligerUI/plugins/ligerDialog.js"
+	type="text/javascript"></script>
+<script src="${rc.contextPath}/assets/js/ligerUI/ligerui.min.js"
+	type="text/javascript"></script>
+<script src="${rc.contextPath}/assets/js/ligerUI/plugins/ligerToolBar.js"
+	type="text/javascript"></script>
+
+<link href="${rc.contextPath}/assets/js/ligerUI/skins/Aqua/css/ligerui-all.css"
+	rel="stylesheet" type="text/css" />
+<link href="${rc.contextPath}/assets/js/ligerUI/skins/blue/css/all.css"
+	rel="stylesheet" type="text/css" />
+<link href="${rc.contextPath}/assets/js/ligerUI/skins/ligerui-icons.css"
+	rel="stylesheet" type="text/css" />
+</head>
+<!--header-->
+<body>
+	<!--footer-->
+	<script type="text/javascript">
+		var manager;
+		$(function() {
+			manager = $("#maingrid").ligerGrid({
+				columns : [  {
+					display : '表名',
+					name : 'tableName',
+					align : 'center',
+					width:320,
+					minWidth : 300,
+				}, 
+				{
+					display : '创建人',
+					name : 'createUserName',
+					align : 'center',
+					width:320,
+					minWidth : 300,
+				}, 
+				{
+					display : '备注',
+					name : 'comment',
+					align : 'center',
+					width:320,
+					minWidth : 300,
+				}	
+				],
+				autoCheckChildren : false,
+				alternatingRow : false,
+				checkbox : true,
+				rownumbers : true,
+				width : '100%',
+				height : '90%',
+				heightDiff : -2,
+				showTitle : true,
+				colDraggable : true,
+				isScroll : true, 
+				frozen : true,
+				pageSize : 20,
+				pageSizeOptions : [ 20, 30, 40, 50, 100 ],
+				url : "${rc.contextPath}/hivetable/hivetablelist",
+				toolbar : {
+					items : [ {
+						text : '刷新',
+						click : f_reload,
+						disable : false,
+						icon : 'refresh'
+					}, {
+						line : true
+					},
+					{
+						text : '增加',
+						disable : false,
+						click : add,
+						icon : 'add'
+					},
+					{
+						line : true
+					},
+					{
+						text : '编辑',
+						disable : false,
+						click : edit,
+						icon : 'edit'
+					},{
+						line : true
+					},
+					{
+						text : '删除',
+						disable : false,
+						click : del,
+						icon : 'delete'
+					}, {
+						line : true
+					} 
+					
+					]
+				},
+			});
+			
+		});
+ 
+		function edit() {
+			var id="";
+			var data = manager.getCheckedRows();
+			if(data.length!=1){	
+				LG.showError("请选择一条数据进行编辑.");
+				return;
+			}
+			id = data[0].id;
+			window.location.href = "${rc.contextPath}/hivetable/edittable?id="+id;
+		}
+		
+		function add() {
+			window.location.href = "${rc.contextPath}/hivetable/addhivetable";
+		}
+		
+		function del() {
+				var ids="";
+				var data = manager.getCheckedRows();
+				if(data.length<=0){
+					LG.showError("请选择要删除的记录.");
+					return;
+				}
+				for ( var i = 0; i < data.length; i++) {
+					ids= ids+data[i].id+",";
+				}
+			    $.ligerDialog.confirm("您确认删除该数据吗?", function(yes){
+					if(yes){
+						$.ajax({
+							type : 'post',
+							cache : false,
+							dataType : 'html',
+							async : false,
+							data : "ids="+ ids,
+							url : '${rc.contextPath}/hivetable/deletetable',
+							success : function(data) {
+								if (data == "success") {
+									LG.showSuccess("删除成功");
+									f_reload();
+								} else {
+									LG.showError("删除失败");
+								}
+							},
+							error : function(xhr, status, errMsg) {
+								LG.showAjaxError(xhr, status, errMsg);
+							},
+							complete : function() {
+								LG.hideLoading();
+							}
+						});
+						
+					}});
+		}
+		
+		
+		function f_reload() {
+			manager.loadData();
+		}
+		
+		function toJsonObject(jsonString) {
+			if (typeof jsonString == 'object')
+				return jsonString;
+			jsonString = jsonString.replace(/^(?:\<pre[^\>]*\>)?(\{.*\})(?:\<\/pre\>)?$/ig, "$1");
+			return eval('(' + jsonString + ')');
+		}	
+		
+		function f_search_action() {
+			$("#form").trigger("checkInput");
+			var form = $("#formsearch");
+			LG.searchForm(form, manager);
+		}
+		
+	</script>
+
+<div id="body" class="span10" style="float: left; margin-top: 0px; width: 98%; height: 500px;">
+<div id="maingrid">
+</div>
+</div>
+<script type="text/javascript">
+	$(function (){
+		if(window.parent)
+		window.parent.clearLoading();
+	});
+</script>
+</body>
+</html>

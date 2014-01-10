@@ -1,0 +1,67 @@
+#set($nav='crontab.list')
+
+<div>
+<a href="/hwi/crontabs">Crontabs</a>
+/
+<h2>
+    $crontab.getName()
+    <a class="pull-right btn right-btn" href="/hwi/queries?crontabId=$crontab.getId()" title="Query History"><i class="icon-film"></i></a>
+    <a class="pull-right btn" href="/hwi/crontabs/create?crontabId=$crontab.getId()" title="Clone It !"><i class="icon-retweet"></i></a>
+</h2>
+</div>
+<hr class="bold">
+    
+<dl class="dl-horizontal">
+    <dt><span class="label #crontab_status($crontab.getStatus())">$crontab.getStatus()</span></dt>
+    <dd>
+        <a class="btn btn-mini" href="/hwi/crontabs/$crontab.getId()/update" title="edit"><i class="icon-edit"></i></a>
+        
+        #if ( $crontab.getStatus() == 'RUNNING' || $crontab.getStatus() == 'DELETED')
+        <a class="crontab-action btn btn-mini btn-warning" style="margin-left:10px;" href="/hwi/crontabs/$crontab.getId()/changeStatus/paused" title="pause"><i class="icon-pause"></i></a>
+        #end
+        
+        #if ( $crontab.getStatus() == 'PAUSED')
+        <a class="crontab-action btn btn-mini" style="margin-left:10px;" href="/hwi/crontabs/$crontab.getId()/changeStatus/running" title="run"><i class="icon-time"></i></a>
+        #end
+        
+        #if ( $crontab.getStatus() == 'RUNNING' || $crontab.getStatus() == 'PAUSED')
+        
+        <a class="crontab-action btn btn-mini btn-danger" style="margin-left:10px;" href="/hwi/crontabs/$crontab.getId()/changeStatus/deleted" title="delete"><i class="icon-trash"></i></a>
+        #end
+        
+    </dd>
+</dl>
+
+<script>
+$(function(){
+    $('a.crontab-action').click(function(){
+        var msg = 'Are you Sure to ' + $(this).attr('title') + ' this Crontab ?'
+        if(confirm(msg)){
+            return true
+        }else{
+            return false
+        }
+    })
+})
+</script>
+
+
+<hr>
+<h3>Basic</h3>
+<hr>
+<dl class="dl-horizontal">
+    <dt>Crontab</dt>
+    <dd><code>$crontab.getCrontab()</code></dd>
+    <dt>Query</dt>
+    <dd>
+        #shortQuery($crontab.getQuery())
+        <pre class="short-query toggle" title="click to see full query"><code class="sql">$shortQuery</code></pre>
+        <pre class="long-query togglable hide"><code class="sql">$crontab.getQuery()</code></pre>
+    </dd>
+    <dt>Callback</dt>
+    <dd>#alt($crontab.getCallback() '--')</dd>
+    <dt>Created</dt>
+    <dd>#alt($createdTime "--")</dd>
+    <dt>Updated</dt>
+    <dd>#alt($updatedTime "--")</dd>
+</dl>

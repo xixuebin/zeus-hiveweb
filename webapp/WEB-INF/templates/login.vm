@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>掌阅Zeus自助查询平台</title>
+<link rel="stylesheet" type="text/css" href="${rc.contextPath}/assets/css/stylehwi.css"/>
+<link href="${rc.contextPath}/assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="${rc.contextPath}/assets/css/github.css" rel="stylesheet">
+  <link href="${rc.contextPath}/assets/css/custom.less" rel="stylesheet/less">
+        
+  <script src="${rc.contextPath}/assets/js/jquery.min.js" type="text/javascript" ></script>
+  <script type="text/javascript" src="${rc.contextPath}/assets/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="${rc.contextPath}/assets/js/less-1.3.0.min.js"></script>
+  <script type="text/javascript" src="${rc.contextPath}/assets/js/highlight.pack.js"></script>
+  <script type="text/javascript" src="${rc.contextPath}/assets/js/custom.js"></script>
+ <script language="JavaScript">
+    if (window != top)
+     top.location.href = location.href;
+</script>
+</head>
+<body id="z-index">
+<div class="z-p-head">
+<div class="z-head">
+<a href="#" class="z-logo">
+<img src="${rc.contextPath}/assets/img/logo.jpg"/>
+</a>
+<span>掌阅Zeus自助查询平台</span>
+</div>
+</div>
+<div class="z-p-content">
+<div class="z-content">
+<form action="${rc.contextPath}/login" method="post" name='loginform' class="z-login">
+<h1 class="z-tit">用户登录</h1>
+<input name="userName" type="text" class="z-text" value="输入用户名" onfocus="if(this.value=='输入用户名'){this.value=''}"/>
+<input name="pwd" type="password" class="z-text" value="输入密码" onfocus="if(this.value=='输入密码'){this.value=''}" value="输入密码"/>
+<button class="z-btn" onclick="document.loginform.submit()">登录</button>
+  #if($msg)
+            <div class="alert alert-#alt($msg-type 'error')">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                $msg
+            </div>
+            #end
+</form>
+</div>
+</div>
+<div class="z-p-footer">
+<div class="z-footer">
+<p class="z-textC">2013 All Rights Reserved 掌中浩阅科技有限公司 版权所有</p>
+</div>
+</div>
+</body>
+</html>

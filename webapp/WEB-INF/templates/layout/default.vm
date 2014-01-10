@@ -1,0 +1,240 @@
+<!DOCTYPE html> 
+<html>
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+   <meta http-equiv="Cache-Control" content="no-store"/>
+   <meta http-equiv="Pragma" content="no-cache"/>
+   <meta http-equiv="Expires" content="0"/>
+    <title>掌阅Zeus自助查询平台</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="renren star">
+	<meta name="author" content="Super Man">
+		<!-- The styles -->
+	<link id="bs-css"  href="${rc.contextPath}/assets/css/bootstrap-cerulean.css" rel="stylesheet">
+	<script src="${rc.contextPath}/assets/js/jquery-1.7.2.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="${rc.contextPath}/assets/css/stylehwi.css"/>
+	<link href="${rc.contextPath}/assets/css/bootstrap-responsive.css" rel="stylesheet">
+	<link href="${rc.contextPath}/assets/css/charisma-app.css" rel="stylesheet">
+	<link href="${rc.contextPath}/assets/css/jquery-ui-1.8.21.custom.css" rel="stylesheet">
+	<script src="${rc.contextPath}/assets/js/jquery.min.js" type="text/javascript" ></script>
+    <script type="text/javascript" src="${rc.contextPath}/assets/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="${rc.contextPath}/assets/js/less-1.3.0.min.js"></script>
+    <script type="text/javascript" src="${rc.contextPath}/assets/js/highlight.pack.js"></script>
+    <script type="text/javascript" src="${rc.contextPath}/assets/js/custom.js"></script>
+	<link rel="shortcut icon" href="${rc.contextPath}/assets/img/favicon.ico">
+<style>
+.main {
+    overflow: hidden;
+}
+.main ul.link{
+float:right;
+margin-right:-12px
+}
+.main ul,li{
+margin:0;
+padding:0
+}
+.main ul.link li:after{
+color:#AAAAAA;
+content:" |";
+}
+.main ul.link li{
+display:inline-block;
+margin-right:1ex;
+}
+.main li{
+list-style:none outside none;
+}
+.haoes {
+    background: none repeat scroll 0 0 #F7F7F7;
+    clear: both;
+    color: #888888;
+    font-family: tahoma,mingliu;
+    font-size: 11px;
+    line-height: 25px;
+    margin-top: 15px;
+    padding: 8px;
+    text-align: center;
+}
+.haoes a:visited {
+    color: #888888;
+}
+.dot {
+    font-weight: bold;
+    margin: 0 8px;
+}
+</style>
+<body>
+<!-- topbar starts -->
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="container-fluid" style="padding-right: 0px;padding-left: 0px;">
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".top-nav.nav-collapse,.sidebar-nav.nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<a class="brand" style="width:400px;height:padding:4px 10px 6px" target="_blank" href="http://www.zhangyue.com"><img style="width:100px;height:30px" alt="Logo" src="${rc.contextPath}/assets/img/logo.jpg" />
+				 <span style="margin-top:5px;font-weight:bold">掌阅Zeus自助查询平台</span>
+				</a>			
+				<!-- theme selector ends -->			
+				<!-- user dropdown starts -->
+				<div class="btn-group pull-right" >
+					<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+						<i class="icon-user"></i><span class="hidden-phone">$userName</span>
+						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+					<!-- 
+						<li><a href="#">Profile</a></li>
+						<li class="divider"></li>
+						 -->
+						<li><a href="logout">Logout</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- topbar ends -->
+<div class="row-fluid1" style="display:none;float:right;z-index:5;right:20px;position:absolute">
+  <img src="${rc.contextPath}/assets/img/ajax-loaders/ajax-loader-5.gif"  >
+</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+			<!-- left menu starts -->
+			<div class="span2 main-menu-span">
+				<div class="well nav-collapse sidebar-nav">
+					<ul class="nav nav-tabs nav-stacked main-menu">
+					    <li class="nav-header hidden-tablet">任务管理</li>
+						<li><a class="ajax-link" target="home"  href='${rc.contextPath}/task/create'><i class="icon-plus"></i><span class="hidden-tablet">创建任务</span></a></li>
+						<li><a class="ajax-link" target="home" href='${rc.contextPath}/task/list?extra=my'><i class="icon-plus"></i><span class="hidden-tablet">我的任务</span></a></li>
+						#if($level=="1")
+						<li><a class="ajax-link" target="home" href='${rc.contextPath}/task/list?extra=all'><i class="icon-plus"></i><span class="hidden-tablet">所有任务</span></a></li>
+						<li class="nav-header hidden-tablet">用户管理</li>
+						<li><a class="ajax-link" target="home"   href='${rc.contextPath}/users/add'> <i class="icon-user"></i><span class="hidden-tablet">添加用户</span></a></li>
+						
+					    <li class="nav-header hidden-tablet">数据库表</li>
+						<li><a class="ajax-link" target="home"  href='${rc.contextPath}/hivetable/addhivetable'><i class="icon-edit"></i><span class="hidden-tablet">添加hive表</span></a></li>
+						<li><a class="ajax-link" target="home"  href='${rc.contextPath}/hivetable/hivelist'><i class="icon-edit"></i><span class="hidden-tablet">hive表</span></a></li>
+						<li><a class="ajax-link" target="home"  href='${rc.contextPath}/hivetable/authority'><i class="icon-edit"></i><span class="hidden-tablet">设置表访问权限</span></a></li>
+				        #end
+						<li class="nav-header hidden-tablet">帮助中心</li>
+						<li><a class="ajax-link" target="_blank"  href='http://192.168.6.91/wiki/hivesql%E6%A0%B7%E4%BE%8B'><i class="icon-align-justify"></i><span class="hidden-tablet">hive查询样例</span></a></li>
+						<li><a class="ajax-link" target="_blank" href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF" target="_blank"><i class="icon-align-justify"></i><span class="hidden-tablet">hive UDF</span></a></li>
+					</ul>
+					<!-- 
+					<label id="for-is-ajax" class="hidden-tablet" for="is-ajax"><input id="is-ajax" type="checkbox"> Ajax on menu</label>
+					 -->
+				</div><!--/.well -->
+			</div><!--/span-->
+			<!-- left menu ends -->
+			<noscript>
+				<div class="alert alert-block span10">
+					<h4 class="alert-heading">Warning!</h4>
+					<p>You need to have <a href="http://en.wikipedia.org/wiki/JavaScript" target="_blank">JavaScript</a> enabled to use this site.</p>
+				</div>
+			</noscript>
+			<div id="content" class="span10" style="width:82%;height:650px;">
+			      <iframe frameborder="0" width="99%"  height="100%" name="home" id="home" src="${rc.contextPath}/task/create"></iframe>
+			</div>
+					
+	</div>
+	
+	<hr>
+	  <footer>
+            <div class="z-p-footer">
+             <div class="z-footer">
+             <p class="z-textC">2013 All Rights Reserved 掌中浩阅科技有限公司 版权所有</p>
+             </div>
+           </div>
+	 </footer>
+</div>
+ <!-- jQuery -->
+	<script src="${rc.contextPath}/assets/js/jquery-1.7.2.min.js"></script>
+	<!-- jQuery UI -->
+	<script src="${rc.contextPath}/assets/js/jquery-ui-1.8.21.custom.min.js"></script>
+	<!-- transition / effect library -->
+	<script src="${rc.contextPath}/assets/js/bootstrap-transition.js"></script>
+	<!-- alert enhancer library -->
+	<script src="${rc.contextPath}/assets/js/bootstrap-alert.js"></script>
+	<!-- modal / dialog library -->
+	<script src="${rc.contextPath}/assets/js/bootstrap-modal.js"></script>
+	<script src="${rc.contextPath}/assets/js/bootstrap-modal-confirm.js"></script>
+	<!-- custom dropdown library -->
+	<script src="${rc.contextPath}/assets/js/bootstrap-dropdown.js"></script>
+	<!-- scrolspy library -->
+	<script src="${rc.contextPath}/assets/js/bootstrap-scrollspy.js"></script>
+	<!-- library for creating tabs -->
+	<script src="${rc.contextPath}/assets/js/bootstrap-tab.js"></script>
+	<!-- library for advanced tooltip -->
+	<script src="${rc.contextPath}/assets/js/bootstrap-tooltip.js"></script>
+	<!-- popover effect library -->
+	<script src="${rc.contextPath}/assets/js/bootstrap-popover.js"></script>
+	<!-- button enhancer library -->
+	<script src="${rc.contextPath}/assets/js/bootstrap-button.js"></script>
+	<!-- accordion library (optional, not used in demo) -->
+	<script src="${rc.contextPath}/assets/js/bootstrap-collapse.js"></script>
+	<!-- carousel slideshow library (optional, not used in demo) -->
+	<script src="${rc.contextPath}/assets/js/bootstrap-carousel.js"></script>
+	<!-- autocomplete library -->
+	<script src="${rc.contextPath}/assets/js/bootstrap-typeahead.js"></script>
+	<!-- tour library -->
+	<script src="${rc.contextPath}/assets/js/bootstrap-tour.js"></script>
+	<!-- library for cookie management -->
+	<script src="${rc.contextPath}/assets/js/jquery.cookie.js"></script>
+	<!-- calander plugin -->
+	<script src='${rc.contextPath}/assets/js/fullcalendar.min.js'></script>
+	<!-- data table plugin -->
+	<script src='${rc.contextPath}/assets/js/jquery.dataTables.min.js'></script>
+
+	<!-- chart libraries start -->
+	<script src="${rc.contextPath}/assets/js/excanvas.js"></script>
+	<script src="${rc.contextPath}/assets/js/jquery.flot.min.js"></script>
+	<script src="${rc.contextPath}/assets/js/jquery.flot.pie.min.js"></script>
+	<script src="${rc.contextPath}/assets/js/jquery.flot.stack.js"></script>
+	<script src="${rc.contextPath}/assets/js/jquery.flot.resize.min.js"></script>
+	<!-- chart libraries end -->
+
+	<!-- select or dropdown enhancer -->
+	<script src="${rc.contextPath}/assets/js/jquery.chosen.min.js"></script>
+	<!-- checkbox, radio, and file input styler -->
+	<script src="${rc.contextPath}/assets/js/jquery.uniform.min.js"></script>
+	<!-- plugin for gallery image view -->
+	<script src="${rc.contextPath}/assets/js/jquery.colorbox.min.js"></script>
+	<!-- rich text editor library -->
+	<script src="${rc.contextPath}/assets/js/jquery.cleditor.min.js"></script>
+	<!-- notification plugin -->
+	<script src="${rc.contextPath}/assets/js/jquery.noty.js"></script>
+	<!-- file manager library -->
+	<script src="${rc.contextPath}/assets/js/jquery.elfinder.min.js"></script>
+	<!-- star rating plugin -->
+	<script src="${rc.contextPath}/assets/js/jquery.raty.min.js"></script>
+	<!-- for iOS style toggle switch -->
+	<script src="${rc.contextPath}/assets/js/jquery.iphone.toggle.js"></script>
+	<!-- autogrowing textarea plugin -->
+	<script src="${rc.contextPath}/assets/js/jquery.autogrow-textarea.js"></script>
+	<!-- multiple file upload plugin -->
+	<script src="${rc.contextPath}/assets/js/jquery.uploadify-3.1.min.js"></script>
+	<!-- history.js for cross-browser state change on ajax -->
+	<script src="${rc.contextPath}/assets/js/jquery.history.js"></script>
+	<!-- application script for Charisma demo -->
+	<script src="${rc.contextPath}/assets/js/charisma.js"></script>
+	
+	<script src="${rc.contextPath}/assets/js/json2.js"></script>
+	<script src="${rc.contextPath}/assets/js/Spider.js"></script>
+	
+	<script src="${rc.contextPath}/assets/js/onload.js"></script>
+	
+	<!--jquery validation-->
+	<script src="${rc.contextPath}/assets/js/validation/jquery.validationEngine.js"></script>
+	<script src="${rc.contextPath}/assets/js/validation/jquery.validationEngine-cn.js"></script>
+	<!-- <script src="${rc.contextPath}/assets/js/validation/jquery.validationEngine-apollo.js"></script> -->
+	
+<script type="text/javascript">
+	$(function (){
+		if(window.parent)
+		window.parent.clearLoading();
+	});
+</script>
+</body>
+</html>
+

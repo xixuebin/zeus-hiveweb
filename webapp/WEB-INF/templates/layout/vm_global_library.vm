@@ -1,0 +1,35 @@
+#macro(alt $a $b)#if("$!a"!="")$a#{else}$b#end#end
+
+#macro(query_status $status)
+#set($map = {
+    "INITED": "",
+    "FINISHED": "label-success", 
+    "FAILED": "label-important", 
+    "SYNTAXERROR": "label-warning", 
+    "RUNNING": "label-info"})$map["$status"]#end
+
+#macro(crontab_status $status)
+#set($map = {
+    "RUNNING": "label-info",
+    "PAUSED": "label-warning",
+    "DELETED": "label-important"})$map["$status"]#end
+
+#macro (pagination $pagination $urlQuery)
+
+<div class="pagination" style="margin:3px 0px;">
+    <ul>
+         $pagination.getPageString($urlQuery)
+         <li style="float:left;"><span>共有$pagination.getTotalCount()条记录,每页显示10条,共$pagination.getTotalPages()页</span></li>
+    </ul>
+</div>
+#end
+
+#macro (shortQuery $query)
+    #if($query.length() > 30)
+        #set($shortQuery=$query.substring(0,30))
+    #else
+        #set($shortQuery=$query)
+    #end
+
+    #set($shortQuery=$shortQuery.replaceAll("\r|\n", " "))
+#end
