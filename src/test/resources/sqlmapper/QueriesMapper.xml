@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="queriesMapper">
+    <resultMap type="queriesEntity" id="result_map">
+        <result property="id" column="id"/>
+        <result property="callback" column="callback"/>
+        <result property="cpuTime" column="cpu_time"/>
+        <result property="created" column="created"/>
+        <result property="errorCode" column="error_code"/>
+        <result property="errorMsg" column="error_msg"/>
+        <result property="groupId" column="group_id"/>
+        <result property="jobId" column="job_id"/>
+        <result property="taskName" column="task_name"/>
+        <result property="querySql" column="query_sql"/>
+        <result property="resultLocation" column="result_location"/>
+        <result property="status" column="status"/>
+        <result property="totalTime" column="total_time"/>
+        <result property="updated" column="updated"/>
+        <result property="userId" column="user_id"/>
+    </resultMap>
+    <sql id="base_column">
+	    id,callback,cpu_time,created,error_code,error_msg,group_id,job_id,task_name,query_sql,
+	    result_location,status,total_time,updated,user_id
+	</sql>
+	<insert id="addQueryTask"  parameterType="queriesEntity"  useGeneratedKeys="true"  keyProperty="id">
+		insert into QUERIES(created,group_id,task_name,query_sql,result_location,status,user_id,updated)
+		values(#{created},#{groupId},#{taskName},#{querySql},#{resultLocation},#{status},#{userId},#{updated})
+	</insert>
+	<update id="updateQueryTask" parameterType="queriesEntity">  
+        update QUERIES 
+        <set>
+          <if  test = "cpuTime != 0">
+           cpu_time = #{cpuTime},
+          </if>
+          <if  test = "errorCode != 0">
+           error_code = #{errorCode},
+          </if>
+           <if  test = "errorMsg != null">
+           error_msg = #{errorMsg},
+          </if>
+           <if  test = "jobId != null">
+           job_id = #{jobId},
+          </if>
+           <if  test = "resultLocation != null">
+           result_location = #{resultLocation},
+          </if>
+           <if  test = "status != null">
+           status = #{status},
+          </if>
+           <if  test = "totalTime != 0">
+           total_time = #{totalTime}
+          </if>
+        </set>
+        where id=#{id}
+    </update>  
+	<select id="findSumbitTaskPageCount"  parameterType="queriesEntity"  resultType="int">
+	    select  count(*)  from  QUERIES  
+		 <if test = "userId != 0 || taskName != null">
+		     <where>
+		        <if test = "userId != 0">
+		           user_id = #{userId}
+		        </if>
+		        <if test = "taskName != null">
+		           and task_name like  concat('%',#{taskName},'%')
+		        </if>
+		        <if test = "status != null">
+		           and status =#{status}
+		        </if>
+		     </where>
+		 </if>
+	</select>
+	
+	<select id="findSumbitTaskPage"  parameterType="queriesEntity" resultMap="result_map">
+		select 
+		<include refid="base_column" />  
+		from  QUERIES  
+		 <if test = "userId != 0 || taskName != null">
+		     <where>
+		        <if test = "userId != 0">
+		           user_id = #{userId}
+		        </if>
+		        <if test = "taskName != null">
+		           and task_name like  concat('%',#{taskName},'%')
+		        </if>
+		        <if test = "status != null">
+		           and status =#{status}
+		        </if>
+		     </where>
+		 </if>
+         order by id desc  limit  #{pageStart},#{pageSize}
+	</select>
+	
+	<select id="findSumbitTaskById"  parameterType="queriesEntity" resultMap="result_map">
+		select 
+		<include refid="base_column" /> 
+		from  QUERIES 
+		where  id=#{id} 
+	</select>
+	
+	
+	
+	
+</mapper>

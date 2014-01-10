@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hiveTableMapper">
+    <resultMap type="hiveTableEntity" id="result_map">
+        <result property="id" column="id"/>
+        <result property="createUserId" column="create_user_id"/>
+        <result property="tableName" column="table_name"/>
+        <result property="comment" column="comment"/>
+        <result property="dbName" column="db_name"/>
+        <result property="FieldComment" column="field_comment"/>
+        <result property="field" column="field"/>
+        <result property="fieldType" column="field_type"/>
+        <result property="isPartition" column="is_partition"/>
+        <result property="userName" column="user_name"/>
+        <result property="fieldId" column="field_id"/>
+        <result property="userId" column="user_id"/>
+    </resultMap>  
+
+    <sql id="base_column">
+	    id,create_user_id,table_name,comment,db_name
+	</sql>
+	
+	<insert id="insertHiveTable"  parameterType="hiveTableEntity"  useGeneratedKeys="true"  keyProperty="id">
+		insert into HIVE_TABLE (create_user_id,table_name,comment,db_name) values (#{createUserId},#{tableName},#{comment},#{dbName})
+	</insert>
+	
+	<select id="queryHiveTableByTableName"   parameterType="hiveTableEntity"  resultMap="result_map">
+		select 
+		<include refid="base_column" />
+		from HIVE_TABLE  where table_name = #{tableName}
+	</select>
+	
+	<select id="queryAllHiveTable"  resultMap="result_map">
+		select h.id,u.user_name,u.id as create_user_id,h.table_name,h.comment,h.db_name from HIVE_TABLE h,USER u where u.id=h.create_user_id
+	</select>
+	
+	<select id="queryHiveTableById"  parameterType="hiveTableEntity" resultMap="result_map">
+		select h.id,h.table_name,t.id as fieldId,t.field_comment,h.comment,h.db_name,t.field,t.field_type,t.is_partition 
+		 from HIVE_TABLE h,TABLE_FIELD  t where h.id=t.table_id and h.id=#{id}
+	</select>
+	
+	<insert id="insertHiveTableField" parameterType="java.util.List">
+		insert into TABLE_FIELD (table_id,field,field_type,filed_comment,is_partition) values 
+		<foreach collection="list" item="item" index="index" separator=",">
+		   (#{item.id},#{item.field},#{item.fieldType},#{item.FieldComment},#{item.isPartition})
+		</foreach>
+	</insert>
+    <delete id="deleteTableFieldById" parameterType="hiveTableEntity">
+        delete from TABLE_FIELD where id=#{fieldId}
+    </delete>
+    <delete id="deleteFieldByTableId" parameterType="hiveTableEntity">
+        delete from TABLE_FIELD where table_id=#{id}
+    </delete>
+    <update id="updateHiveTable" parameterType="hiveTableEntity">  
+        update HIVE_TABLE set table_name=#{tableName},comment=#{comment} where id=#{id} 
+    </update>  
+    <select id="findHiveTableLListByUserId"  parameterType="hiveTableEntity" resultMap="result_map">
+        select h.id,h.table_name,h.comment,h.db_name from HIVE_TABLE h,USER_TABLE u where  u.table_id=h.id   and u.user_id = #{userId}
+	</select>
+    <delete id="deleteHiveTableById" parameterType="hiveTableEntity">
+        delete from HIVE_TABLE where id=#{id}
+    </delete>
+    <select id="findHiveTableCount" resultType="int">
+        select count(*) as count from HIVE_TABLE h,USER u where u.id=h.create_user_id
+    </select>
+     <select id="findHiveTablePage"  parameterType="hiveTableEntity" resultMap="result_map">
+		select h.id,u.user_name,u.id as create_user_id,h.table_name,h.comment,h.db_name from HIVE_TABLE h,USER u where 
+         u.id=h.create_user_id  limit  #{pageStart},#{pageSize}
+	</select>
+     <insert id="addUserHiveTable"  parameterType="hiveTableEntity" >
+        insert into  USER_TABLE(user_id,table_id) values(#{userId},#{id})
+	</insert>
+	  <delete id="deleteUserTableByUserId" parameterType="hiveTableEntity">
+        delete from  USER_TABLE where user_id=#{userId}
+    </delete>
+    <select id="findHiveTableList"  parameterType="hiveTableEntity" resultMap="result_map">
+		select h.id,u.user_name,u.id as create_user_id,h.table_name,h.comment,h.db_name from HIVE_TABLE h,USER u where 
+         u.id=h.create_user_id 
+        <if test = "tableName != null">
+		   and table_name like  concat('%',#{tableName},'%')
+		</if>
+		<if test = "level != 1">
+		   and user_id = #{userId}
+		</if>
+	</select>
+</mapper>

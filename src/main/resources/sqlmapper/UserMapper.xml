@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="userMapper">
+    <resultMap type="userEntity" id="result_user_map">
+        <result property="id" column="id"/>
+        <result property="userName" column="user_name"/>
+        <result property="pwd" column="pwd"/>
+        <result property="level" column="level"/>
+        <result property="isDelete" column="is_delete"/>
+    </resultMap>  
+
+    <sql id="base_column">
+	    id,user_name,pwd,level,is_delete
+	</sql>
+	
+	<select id="selectByQuery" parameterType="userEntity"  resultType="userEntity">
+		select 
+		<include refid="base_column" />
+		from USER
+	</select>
+	<insert id="adduser"  parameterType="userEntity"  useGeneratedKeys="true"  keyProperty="id">
+		insert into USER (user_name,pwd,level) values (#{userName},#{pwd},#{level})
+	</insert>
+	
+	<select id="queryUser"   parameterType="userEntity"  resultMap="result_user_map">
+		select 
+		<include refid="base_column" />
+		from USER 
+		<where>  
+        <if test="userName != null">  
+            user_name = #{userName}  
+        </if>  
+        <if test="pwd != null">  
+            and pwd = #{pwd}  
+        </if>  
+        <if test="level != 0">  
+            and level = #{level}  
+        </if>
+        <if test="isDelete != null">
+            and is_delete = #{isDelete}
+        </if>  
+    </where>  
+	</select>
+	
+</mapper>
