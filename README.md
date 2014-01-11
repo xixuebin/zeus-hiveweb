@@ -13,5 +13,8 @@ zeus-hiveweb系统技术架构
 系统服务主要是调用hive 提供的hwi接口，所以只要hwi接口名不变 都可以使用，zeus系统自己部署了一套hive客户端     
 所以该服务器需要配置hive-site.xml，系统需要调用hadoop 接口kill 任务，所以需要配置mapred-site.xml      
 
+该项目属于 ireader   数据分析部
+有问题可以联系：weirongneng@zhangyue.com
+
 
 
